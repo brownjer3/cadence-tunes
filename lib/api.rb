@@ -7,6 +7,7 @@ class API
     end
 
     def authenticate
+        #current manually fetching a new access token when it expires... need to extend or automate this process
         access_token = ""
         refresh_token = ""
         @header = {
@@ -21,6 +22,7 @@ class API
         HTTParty.get(@url, headers: self.authenticate)
     end
 
+    #doesnt seem like this step is needed with HTTParty
     def parse
         JSON.parse(response.body)
     end
