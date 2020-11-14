@@ -1,12 +1,13 @@
 class Song
-    attr_accessor :name, :genre, :id, :artist, :popularity
+    attr_accessor :name, :genre, :id, :artist, :tempo, :popularity
 
     @@all = []
 
-    def initialize(name, genre, id, artist, popularity)
+    def initialize(name, genre, id, artist, tempo, popularity)
         @name = name
         @genre = genre
         @artist = artist
+        @tempo = tempo
         @popularity = popularity
 
         @@all << self
@@ -17,7 +18,11 @@ class Song
     end
 
     def self.find_by_genre(genre)
-        songs = self.all.select {|s| s.genre == genre}
+        self.all.select {|s| s.genre == genre}
+    end
+
+    def self.find_by_genre_and_tempo(genre, tempo)
+        self.all.select {|s| s.genre == genre && s.tempo == tempo}
     end
 
     def self.display_ranked_songs_by_genre(genre, x)

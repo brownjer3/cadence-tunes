@@ -1,9 +1,12 @@
 class SpotifyObjCreator
+    attr_accessor :response
+
     GENRE_URL = "https://api.spotify.com/v1/recommendations/available-genre-seeds"
     RECOMMENDATIONS_URL = "https://api.spotify.com/v1/recommendations?limit=10&market=us&seed_genres=#{@genre}&target_tempo=#{@tempo}"
 
     def self.access_genres
-        #I guess I don't have to parse this because it's a simple array?
+        #I guess I don't have to parse this because it's a simple array? 
+        #UPDATE: I think spotify data just doesnt need to be parsed
         API.new(GENRE_URL).response
     end
 
@@ -15,17 +18,14 @@ class SpotifyObjCreator
     end
 
     def self.access_recommendations(genre, tempo)
-        # @genre = genre
-        # @tempo = tempo
         url = "https://api.spotify.com/v1/recommendations?limit=100&market=us&seed_genres=#{genre}&target_tempo=#{tempo}"
         API.new(url).response
     end
 
     #i need to figure out how these arguments can best communicate with each other ^^
     def self.create_recommendations(genre, tempo)
-        binding.pry
         self.access_recommendations(genre, tempo)["tracks"].map do |t|
-            Song.new("#{t["name"]}", genre, "#{t["id"]}", "#{t["artists"][0]["name"]}", "#{t["popularity"]}")
+            Song.new("#{t["name"]}", genre, "#{t["id"]}", "#{t["artists"][0]["name"]}", tempo, "#{t["popularity"]}")
         end
     end
 
