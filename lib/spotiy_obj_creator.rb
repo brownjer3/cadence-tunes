@@ -9,7 +9,6 @@ class SpotifyObjCreator
     end
 
     def self.create_genres
-        #binding.pry
         self.access_genres["genres"].map do |g_id|
             name = g_id.gsub(/-/, " ").capitalize
             Genre.new(name, g_id)
@@ -21,7 +20,6 @@ class SpotifyObjCreator
         API.new(url).response
     end
 
-    #i need to figure out how these arguments can best communicate with each other ^^
     def self.create_recommendations(genre, tempo)
         self.access_recommendations(genre, tempo)["tracks"].map do |t|
             Song.new("#{t["name"]}", genre, "#{t["id"]}", "#{t["artists"][0]["name"]}", tempo, "#{t["popularity"]}")

@@ -6,6 +6,7 @@ class Song
     def initialize(name, genre, id, artist, tempo, popularity)
         @name = name
         @genre = genre
+        @id = id
         @artist = artist
         @tempo = tempo
         @popularity = popularity
@@ -14,11 +15,7 @@ class Song
     end
 
     def self.all
-        @@all#.sort_by {|s| s.popularity}.reverse
-    end
-
-    def self.find_by_genre(genre)
-        self.all.select {|s| s.genre == genre}
+        @@all
     end
 
     def self.find_by_genre_and_tempo(genre, tempo)

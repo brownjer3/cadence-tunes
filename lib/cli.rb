@@ -2,7 +2,7 @@
 class CLI
     attr_accessor :cadence, :genre_id, :genre, :x
 
-    # --------------------------  GENERAL METHODS -------------------------- #
+    # --------------------------  GENERAL -------------------------- #
 
     def start
         @x = 9
@@ -10,7 +10,6 @@ class CLI
         get_cadence
         genre_selection
         display_recommended_songs
-        # binding.pry
         song_options
     end
 
@@ -46,7 +45,7 @@ class CLI
 
         input = gets.strip
 
-        if input.to_i.between?(@x-8,@x-1)
+        if input.to_i.between?(@x-8,@x+1)
             select_song(input)
         elsif input == "c"
             change_cadence
@@ -198,7 +197,7 @@ class CLI
 
     def add_to_playlist(song_index)
         playlist = self.find_or_create_playlist
-        playlist.add_song(self.genre.songs[song_index])
+        playlist.add_song(self.find_songs[song_index])
         playlist
     end
 
@@ -209,7 +208,6 @@ class CLI
         input = gets.strip
         playlist = Playlist.new(input)
         puts "Your new '#{input}' playlist was just created!"
-
         playlist
     end
 
