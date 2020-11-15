@@ -14,5 +14,6 @@ In order to use Cadence Tunes you need to...
   * Store client_id, client_secrete, access_token & refresh_token as a hash in a hidden /bin/config file
   
 # Getting your tunes
-```ruby bin/run```
+Start by running 
+```ruby bin/run                                                                                                                                ```
 Follow the prompts to provide your desired running cadence, the genre of music that you like to run to, and select songs to add to your playlists!
