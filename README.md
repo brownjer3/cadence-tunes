@@ -1,2 +1,17 @@
-# cadence-tunes
-Create running playlists based on BPM
+# Cadence Tunes
+Cadence Tunes is a CLI program built with Ruby to create running playlists based on song tempo. The program connects to the Spotify API to retreive music data that the user can browse through. 
+
+The program asks the user to provide their desired running cadence (steps/minute). They're then shown a list of Spotify's seed genres (genres that can be used to provide song recommendations) and asked to select the one they'd like to run to. From there, the program retreives the recommended songs from Spotify and displays them in order of popularity. The user can then choose to add a song to a playlist, browse for more songs, or change any of the information they've previously provided. 
+
+# Setting up Cadence Tunes
+In order to use Cadence Tunes you need to...
+
+* Know your desired running cadence! Take a jog at your desired pace and count the number of steps you take in a minute. 
+* Install Ruby
+* Install all required gems (Bundle Install)
+* Request access from Spotify
+  * store access_token & refresh_token in /bin/config file
+  
+# Getting your tunes
+```bin/run```
+
