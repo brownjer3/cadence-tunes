@@ -8,10 +8,11 @@ In order to use Cadence Tunes you need to...
 
 * Know your desired running cadence! Take a jog at your desired pace and count the number of steps you take in a minute. 
 * Install Ruby
+* Clone the repo
 * Install all required gems (Bundle Install)
-* Request access from Spotify
-  * store access_token & refresh_token in /bin/config file
+* Request authorization from Spotify (https://developer.spotify.com/documentation/general/guides/authorization-guide/)
+  * Store client_id, client_secrete, access_token & refresh_token as a hash in a hidden /bin/config file
   
 # Getting your tunes
-```bin/run```
-
+```ruby bin/run```
+Follow the prompts to provide your desired running cadence, the genre of music that you like to run to, and select songs to add to your playlists!
