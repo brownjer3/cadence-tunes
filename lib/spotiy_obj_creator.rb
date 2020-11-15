@@ -17,7 +17,7 @@ class SpotifyObjCreator
     end
 
     def self.access_recommendations(genre, tempo)
-        url = "https://api.spotify.com/v1/recommendations?limit=100&market=us&seed_genres=#{genre}&target_tempo=#{tempo}"
+        url = "https://api.spotify.com/v1/recommendations?limit=50&market=us&seed_genres=#{genre}&target_tempo=#{tempo}"
         API.new(url).response
     end
 

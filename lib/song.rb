@@ -14,7 +14,7 @@ class Song
     end
 
     def self.all
-        @@all.sort_by {|s| s.popularity}.reverse
+        @@all#.sort_by {|s| s.popularity}.reverse
     end
 
     def self.find_by_genre(genre)

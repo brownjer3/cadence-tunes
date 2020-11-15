@@ -10,6 +10,7 @@ class CLI
         get_cadence
         genre_selection
         display_recommended_songs
+        # binding.pry
         song_options
     end
 
