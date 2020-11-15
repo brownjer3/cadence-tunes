@@ -5,7 +5,6 @@ class CLI
     # --------------------------  GENERAL METHODS -------------------------- #
 
     def start
-        #might want to rename the #x instance variable
         @x = 9
         welcome
         get_cadence
@@ -15,62 +14,59 @@ class CLI
     end
 
     def welcome
-        #also want to put in an informative line on the link b/t BPM and run cadence 
-        puts "     __O        __O        __O         "
-        puts "    / /\\_,     / /\\_,     / /\\_,    "
-        puts "  ___/\\      ___/\\      ___/\\       "
-        puts " /    /_    /    /_    /    /_         " 
-        puts "Welcome to Candence Tunes!"
+        puts "     __O        __O        __O         ".purple
+        puts "    / /\\_,     / /\\_,     / /\\_,    ".purple
+        puts "  ___/\\      ___/\\      ___/\\       ".purple
+        puts " /    /_    /    /_    /    /_         ".purple
+        puts " "
+        puts "   Welcome to Candence Tunes!".purple
+        puts " "
+        sleep(0.5)
     end
 
-    # def main_loop
-    #     display_recommended_songs
-    #     song_options
-    # end
-
     def exit_program
-        puts "Thanks for using Cadence Tunes!"
+        puts "Thanks for using Cadence Tunes!".purple
     end
 
     def error(text)
-        ap "#{text}", options = {color: {string: :red}}
+        puts text.red
+    end
+
+    def main_choice(text)
+        print text.green
     end
 
     # --------------------------  OPTIONS -------------------------- #
 
     def main_options
         puts "'c' To change desired cadence"
-        puts "'d' To view a different genre"
+        puts "'g' To view a different genre"
         puts "'e' To exit"
 
         input = gets.strip
 
-        if input.to_i.between?(1,10)
-            song_index = input.to_i - 1
-            playlist = add_to_playlist(song_index)
-            display_playlist(playlist)
-            playlist_options
+        if input.to_i.between?(@x-8,@x-1)
+            select_song(input)
         elsif input == "c"
             change_cadence
-            main_loop
-        elsif input == "d"
-            genre_selection
+            display_recommended_songs
+            song_options
+        elsif input == "g"
+            change_genre
             display_recommended_songs
             song_options
         elsif input == "m"
-            #should remove the song that was just added - TO-DO
             @x+=10
-            more_songs(@x)
+            display_recommended_songs
             song_options
         elsif input == "b"
             @x-=10
-            back_page(@x)
+            display_recommended_songs
             song_options
         elsif input == "l"
             display_recommended_songs
             song_options
         elsif input == "p"
-            find_playlist
             view_playlist_options
         elsif input == "e"
             exit_program
@@ -79,8 +75,9 @@ class CLI
     end
 
     def song_options
+        main_choice("Enter a song number to add to playlist")
         puts " "
-        puts "Enter a song number to add to playlist"
+        puts "*** OR *** "
         puts "'m' To view more recommended songs in this genre"
         puts "'b' To go back to the previous page"
         main_options
@@ -95,17 +92,18 @@ class CLI
 
     def view_playlist_options
         puts " "
-        puts "Enter the number of the playlist to view all songs"
-        main_options
+        playlist = select_playlist
+        display_playlist(playlist)
+        playlist_options
     end
 
     # --------------------------  CADENCE -------------------------- #
 
     def get_cadence
-        puts "What is your desired running cadence? (steps/minute)"
+        main_choice("What is your desired running cadence? (steps/minute) ")
         input = gets.strip.to_i
         if !input.to_i.between?(90,250)
-            print "Please enter a valid cadence (90-250). Most runners aim for ~180. "
+            error("Please enter a valid cadence (90-250). Most runners aim for ~180. ")
             self.get_cadence
         end
         @cadence = input
@@ -119,31 +117,32 @@ class CLI
 
     # --------------------------  GENRE -------------------------- #
 
-    def genre_selection
-        self.display_genres
-        print @genre_id.nil? ? "And what genre of music do you like to run to?" : "Select a new genre: "
-        input = gets.strip
-        index = input.to_i - 1
-        until index.between?(0, Genre.all.length) 
-            error("Please select a valid genre")
-            input = gets.strip
-            index = input.to_i - 1            
-        end
-        self.select_genre(index)
-    end
-
-    def display_genres
+    def genre_header
         puts "****************************************************"
         puts "*                                                  *"
         puts "*                 List of Genres                   *"
         puts "*                                                  *"
         puts "****************************************************"
-        # Convert to Ternary
+    end
+
+    def display_genres
+        genre_header
         if Genre.all.empty?
             SpotifyObjCreator.create_genres
         end
         sleep(0.5)
         Genre.display_genres
+    end
+
+    def genre_selection
+        display_genres
+        @genre_id.nil? ? main_choice("Enter the number of the genre that you like to run to: ") : main_choice("Select a new genre: ")
+        index = gets.strip.to_i - 1
+        until index.between?(0, Genre.all.length) do
+            error("Please select a valid genre")
+            index = gets.strip.to_i - 1           
+        end
+        select_genre(index)
     end
 
     def select_genre(index)
@@ -154,43 +153,47 @@ class CLI
         end
     end
 
+    def change_genre
+        @x=9
+        genre_selection
+    end
+
     # --------------------------  RECOMMENDATIONS -------------------------- #
 
     def find_songs
         Song.find_by_genre_and_tempo(@genre_id, @cadence)
     end
 
-    def display_recommended_songs
-        songs = find_songs
+    def song_header
         puts "****************************************"
         puts "*                                      *"
         puts "*          Recommended Songs           *"
         puts "*                                      *"
         puts "****************************************"
-
-        songs[0..9].each_with_index do |s,i| 
-            puts "[#{i+1}] #{s.name} -- #{s.artist}"
-        end
     end
 
-    def more_songs(x)
+    def display_recommended_songs
         songs = find_songs
-        songs[(x-9..x)].each_with_index do |s,i| 
-            i+=x
-            puts "[#{i+1}] #{s.name} -- #{s.artist}"
-        end
+        song_header
+        Song.display_10_songs(songs, @x)
     end
 
-    def back_page(x)
-        songs = find_songs
-        songs[(x-9..x)].each_with_index do |s,i| 
-            i+=x
-            puts "[#{i+1}] #{s.name} -- #{s.artist}"
-        end
+    def select_song(input)
+        song_index = input.to_i - 1
+        playlist = add_to_playlist(song_index)
+        display_playlist(playlist)
+        playlist_options
     end
 
     # --------------------------  PLAYLIST -------------------------- #
 
+    def playlist_header
+        puts "****************************************"
+        puts "*                                      *"
+        puts "*           Your Playlists             *"
+        puts "*                                      *"
+        puts "****************************************"
+    end
 
     def add_to_playlist(song_index)
         playlist = self.find_or_create_playlist
@@ -200,27 +203,32 @@ class CLI
 
     def create_playlist
         puts " "
-        puts "Nice choice! Since you don't have any playlists yet, let's make one. " if Playlist.all.empty?
-        print "Please give your new playlist a name: "
+        main_choice("Nice choice! Since you don't have any playlists yet, let's make one. ") if Playlist.all.empty?
+        main_choice("Please give your new playlist a name: ")
         input = gets.strip
         playlist = Playlist.new(input)
         puts "Your new '#{input}' playlist was just created!"
+
         playlist
     end
 
     def display_playlist(playlist)
+        puts " "
+        puts "Your '#{playlist.name}' playlist includes:".purple
+        puts "************************************************************"
         playlist.display_songs
+        puts "************************************************************"
     end
 
     def find_playlist
+        playlist_header
         Playlist.display_all
-        print "Please enter the number of the playlist to select: "
+        main_choice("Please enter the number of the playlist to select: ")
     end
 
     def select_playlist
         find_playlist
-        input = gets.strip
-        index = input.to_i - 1
+        index = gets.strip.to_i - 1
         Playlist.all[index]
     end
 
@@ -247,5 +255,4 @@ class CLI
             end
         end
     end
-
 end

@@ -5,12 +5,11 @@ class SpotifyObjCreator
     RECOMMENDATIONS_URL = "https://api.spotify.com/v1/recommendations?limit=10&market=us&seed_genres=#{@genre}&target_tempo=#{@tempo}"
 
     def self.access_genres
-        #I guess I don't have to parse this because it's a simple array? 
-        #UPDATE: I think spotify data just doesnt need to be parsed
         API.new(GENRE_URL).response
     end
 
     def self.create_genres
+        #binding.pry
         self.access_genres["genres"].map do |g_id|
             name = g_id.gsub(/-/, " ").capitalize
             Genre.new(name, g_id)

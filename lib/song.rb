@@ -25,16 +25,17 @@ class Song
         self.all.select {|s| s.genre == genre && s.tempo == tempo}
     end
 
-    def self.display_ranked_songs_by_genre(genre, x)
-        songs = self.find_by_genre(genre)
-        if x < songs.length
-            songs[(x-9)..x].each_with_index {|s, i| puts "[#{i+1}] #{s.name} --- #{s.artist}"}
+    def self.display_10_songs(arr, x)
+        arr.each_with_index do |s,i| 
+            if i.between?(x-9, x)
+                puts "[#{i+1}] #{s.name} --- #{s.artist}"
+            end
         end
+        puts " "
     end
 
     def add_to_playlist(playlist_obj)
         playlist_obj.songs << self
     end
-
-
+    
 end

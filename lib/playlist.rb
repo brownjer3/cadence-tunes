@@ -1,11 +1,10 @@
 class Playlist
-    attr_accessor :name, :songs, :user
+    attr_accessor :name, :songs
 
     @@all = []
 
-    def initialize(name, user=nil)
+    def initialize(name)
         @name = name
-        @user = user
         @songs = []
         
         @@all << self
@@ -16,15 +15,14 @@ class Playlist
     end
 
     def self.display_all
-        self.all.each_with_index {|p,i| puts "[#{i+1}] #{p.name}"}
+        self.all.each_with_index do |p,i| 
+            song_count = p.songs.count
+            puts "[#{i+1}] #{p.name} - #{song_count} song(s)"
+        end
     end
 
     def display_songs
-        puts " "
-        puts ap "Your '#{self.name}' playlist includes:"
-        puts "************************************************************"
         self.songs.each_with_index {|s,i| puts "[#{i+1}] #{s.name} - #{s.artist}"}
-        puts "************************************************************"
     end
 
     def add_song(song_obj)
@@ -35,7 +33,5 @@ class Playlist
         song = Song.all.find {|s| s.name = name}
         self.songs << song
     end
-
     
-
 end

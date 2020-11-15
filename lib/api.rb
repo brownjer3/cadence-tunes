@@ -1,16 +1,17 @@
 class API
     attr_accessor = :access_token
 
+    FILE = "./bin/config.rb"
+
     def initialize(url)
         @url = url
     end
 
     def config
-        JSON.parse(File.open("./bin/config.rb").read)
+        JSON.parse(File.read(FILE))
     end
 
     def authenticate
-        binding.pry
         access_token = config["access_token"]
         @header = {
             "Authorization" => "Bearer #{access_token}"
@@ -33,17 +34,18 @@ class API
 
     def refresh_response
         response = HTTParty.post("https://accounts.spotify.com/api/token", self.refresh)
-        #binding.pry
-        config["access_token"] = response["access_token"]
+        new_token = response["access_token"]
+        text = File.read(FILE)
+        new_data = text.gsub(/#{config["access_token"]}/, "#{new_token}")
+        File.write("./bin/config.rb", new_data)
     end
 
     def response
         response = HTTParty.get(@url, headers: self.authenticate)
-        #binding.pry
-        if response["error"]["status"] != 200
+        if response.include?("error")
             self.refresh_response
-            HTTParty.get(@url, headers: self.authenticate)
         end
+        HTTParty.get(@url, headers: self.authenticate)
     end
 
     def parse
