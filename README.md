@@ -16,4 +16,4 @@ In order to use Cadence Tunes you need to...
 # Getting your tunes
 Start by running 
 ```ruby bin/run                                                                                                                                ```
-Follow the prompts to provide your desired running cadence, the genre of music that you like to run to, and select songs to add to your playlists!
+And then follow the prompts to provide your desired running cadence, the genre of music that you like to run to, and select songs to add to your playlists! You can edit your target cadence or preferred music genre at any time. 
